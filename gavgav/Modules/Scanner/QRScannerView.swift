@@ -89,7 +89,6 @@ class ScannerVC: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         guard let qrObject = metadataObjects.first as? AVMetadataMachineReadableCodeObject,
               let code = qrObject.stringValue else { return }
         
-        // Остановим сканирование после первого успешного распознавания
         captureSession.stopRunning()
         codeHandler(code)
     }

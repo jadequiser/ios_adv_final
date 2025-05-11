@@ -4,6 +4,7 @@
 //
 //  Created by Symbat Bayanbayeva on 09.05.2025.
 
+
 import SwiftUI
 
 struct ScannerView: View {
@@ -28,10 +29,15 @@ struct ScannerView: View {
                 Spacer()
             }
         }
-        .onChange(of: viewModel.lastScannedCode) { [weak viewModel] _, _ in
-            guard let code = viewModel?.lastScannedCode, !code.isEmpty else { return }
-            coordinator.switchToCatalogTab() // ← Вот этот вызов!
-            isScanningActive = false
+        .onChange(of: viewModel.shouldNavigateToCatalog) { shouldNavigate in
+            if shouldNavigate {
+                print("Пытаюсь переключить на каталог. TabBarController: \(UIApplication.shared.windows.first?.rootViewController is MainTabBarController)")
+                NotificationCenter.default.post(name: .switchToCatalogTab, object: nil)
+                isScanningActive = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    viewModel.shouldNavigateToCatalog = false
+                }
+            }
         }
         .onAppear {
             isScanningActive = true

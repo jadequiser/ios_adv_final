@@ -4,116 +4,8 @@
 //
 //  Created by Symbat Bayanbayeva on 10.05.2025.
 //
-//import UIKit
-//import SwiftUI
-//
-//class MainTabBarController: UITabBarController {
-//    weak var coordinator: AppCoordinator?
-//    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        setupTabs()
-//    }
-//    
-//    private func setupTabs() {
-//        guard let coordinator = coordinator else { return }
-//        
-//        // Вкладка сканера
-//        let scannerView = ScannerView()
-//            .environmentObject(coordinator)
-//        let scannerVC = UIHostingController(rootView: scannerView)
-//        scannerVC.tabBarItem = UITabBarItem(
-//            title: "Сканер",
-//            image: UIImage(systemName: "qrcode"),
-//            tag: 0
-//        )
-//        
-//        // Вкладка каталога (заглушка)
-//        let catalogVC = UIHostingController(rootView: Text("Каталог"))
-//        catalogVC.tabBarItem = UITabBarItem(
-//            title: "Каталог",
-//            image: UIImage(systemName: "list.bullet"),
-//            tag: 1
-//        )
-//        
-//        viewControllers = [
-//            UINavigationController(rootViewController: scannerVC),
-//            UINavigationController(rootViewController: catalogVC)
-//        ]
-//    }
-//}
 
-
-//import UIKit
 import SwiftUI
-//
-//class MainTabBarController: UITabBarController {
-//    weak var coordinator: AppCoordinator?
-//    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        setupTabs()
-//        setupAppearance()
-//    }
-//    
-//    private func setupTabs() {
-//        guard let coordinator = coordinator else { return }
-//        
-//        // 1. Сканер
-//        let scannerView = ScannerView()
-//            .environmentObject(coordinator)
-//        let scannerVC = wrapInNavigation(
-//            view: scannerView,
-//            title: "Сканер",
-//            icon: "qrcode",
-//            tag: 0
-//        )
-//        
-//        // 2. Каталог
-//        let catalogView = CatalogView()
-//        let catalogVC = wrapInNavigation(
-//            view: catalogView,
-//            title: "Каталог",
-//            icon: "list.bullet",
-//            tag: 1
-//        )
-//        
-//        // 3. Чат
-//        let chatView = ChatView()
-//        let chatVC = wrapInNavigation(
-//            view: chatView,
-//            title: "Чат",
-//            icon: "message",
-//            tag: 2
-//        )
-//        
-//        // 4. Профиль
-//        let profileView = ProfileView()
-//        let profileVC = wrapInNavigation(
-//            view: profileView,
-//            title: "Профиль",
-//            icon: "person",
-//            tag: 3
-//        )
-//        
-//        viewControllers = [scannerVC, catalogVC, chatVC, profileVC]
-//    }
-//    
-//    private func wrapInNavigation(view: some View, title: String, icon: String, tag: Int) -> UIViewController {
-//        let hostingVC = UIHostingController(rootView: view)
-//        hostingVC.tabBarItem = UITabBarItem(
-//            title: title,
-//            image: UIImage(systemName: icon),
-//            tag: tag
-//        )
-//        return UINavigationController(rootViewController: hostingVC)
-//    }
-//    
-//    private func setupAppearance() {
-//        tabBar.tintColor = .systemBlue
-//        tabBar.unselectedItemTintColor = .gray
-//    }
-//}
 import UIKit
 
 class MainTabBarController: UITabBarController {
@@ -124,6 +16,16 @@ class MainTabBarController: UITabBarController {
         
         setupTabs()
         setupAppearance()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleSwitchToCatalogTab), name: .switchToCatalogTab, object: nil)
+    }
+    
+    @objc private func handleSwitchToCatalogTab() {
+        print("Switching to Catalog tab")
+        switchToTab(index: 1) // 1 is the index for Catalog
+    }
+    
+    func switchToTab(index: Int) {
+        selectedIndex = index
     }
     
     private func setupTabs() {
@@ -180,4 +82,8 @@ class MainTabBarController: UITabBarController {
             tabBar.scrollEdgeAppearance = appearance
         }
     }
+}
+
+extension Notification.Name {
+    static let switchToCatalogTab = Notification.Name("switchToCatalogTab")
 }
